@@ -48,30 +48,29 @@ tabs = st.tabs(["📋 Escala", "📜 Histórico", "🔐 Admin"])
 with tabs[0]:
     st.subheader("👷 Fila atual")
 
-    for i, nome in enumerate(fila, 1):
-        if i == 1:
-            
-st.markdown(
-    f"""
-    <div style='font-size:18px'>
-        <span style='font-size:40px'>👉👷‍♂️</span>
-        <b>{nome}</b>
-        <span style='color:green'>(PRÓXIMO)</span>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+    
+for i, nome in enumerate(fila, 1):
+    if i == 1:
+        st.markdown(
+            f"""
+            <div style='font-size:18px'>
+                <span style='font-size:40px'>👉👷‍♂️</span>
+                <b>{nome}</b>
+                <span style='color:green'>(PRÓXIMO)</span>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+    else:
+        st.markdown(
+            f"""
+            <div style='font-size:18px'>
+                {i}º → <span style='font-size:30px'>👷‍♂️</span> {nome}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
-        else:
-            
-st.markdown(
-    f"""
-    <div style='font-size:18px'>
-        {i}º → <span style='font-size:30px'>👷‍♂️</span> {nome}
-    </div>
-    """,
-    unsafe_allow_html=True
-)
     st.divider()
 
     if "confirmacao" not in st.session_state:
