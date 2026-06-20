@@ -50,13 +50,28 @@ with tabs[0]:
 
     for i, nome in enumerate(fila, 1):
         if i == 1:
-            st.markdown(
-                f"<h2>👉 👷‍♂️ {nome} <span style='color:green'>(PRÓXIMO)</span></h2>",
-                unsafe_allow_html=True
-            )
-        else:
-            st.markdown(f"<h3>{i}º → 👷‍♂️ {nome}</h3>", unsafe_allow_html=True)
+            
+st.markdown(
+    f"""
+    <div style='font-size:18px'>
+        <span style='font-size:40px'>👉👷‍♂️</span>
+        <b>{nome}</b>
+        <span style='color:green'>(PRÓXIMO)</span>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
+        else:
+            
+st.markdown(
+    f"""
+    <div style='font-size:18px'>
+        {i}º → <span style='font-size:30px'>👷‍♂️</span> {nome}
+    </div>
+    """,
+    unsafe_allow_html=True
+)
     st.divider()
 
     if "confirmacao" not in st.session_state:
@@ -121,17 +136,31 @@ with tabs[2]:
     if senha == SENHA_ADMIN:
         st.success("Modo administrador ativado ✅")
 
-        if dados["historico"]:
-            ultimo = dados["historico"][0]
-            nova_data = st.text_input(
-                "Editar data do último evento",
-                value=ultimo["data"]
-            )
+       
+if dados["historico"]:
 
-            if st.button("💾 Salvar nova data"):
-                dados["historico"][0]["data"] = nova_data
-                salvar(dados)
-                st.success("Data atualizada com sucesso!")
-                st.rerun()
+    opcoes = [
+        f"{i+1} - {item['nome']} - {item['data']}"
+        for i, item in enumerate(dados["historico"])
+    ]
+
+    escolhido = st.selectbox(
+        "Escolha o registro para editar",
+        opcoes
+    )
+
+    indice = opcoes.index(escolhido)
+
+    nova_data = st.text_input(
+        "Nova data",
+        value=dados["historico"][indice]["data"]
+    )
+
+    if st.button("💾 Salvar alteração"):
+        dados["historico"][indice]["data"] = nova_data
+        salvar(dados)
+        st.success("Data alterada com sucesso!")
+        st.rerun()
+
     else:
         st.info("Área restrita 🔒")
