@@ -106,6 +106,27 @@ with tab_escala:
     if col2.button("❌ Recusou dobra"):
         st.session_state.conf_dobra = "recusou"
 
+    st.divider()
+
+    if st.button("🔄 Resetar escala de dobra"):
+        # Procurar último que aceitou
+        ultimo_aceitou = None
+        for h in dados["historico"]:
+            if h["acao"] == "aceitou":
+                ultimo_aceitou = h["nome"]
+                break
+
+        if not ultimo_aceitou:
+            st.warning("Nenhuma dobra aceita ainda. Reset não aplicado.")
+        else:
+            if ultimo_aceitou in fila:
+                idx = fila.index(ultimo_aceitou)
+                dados["fila"] = fila[idx+1:] + fila[:idx+1]
+                salvar(dados)
+                st.success(
+                    f"Escala resetada a partir do último que aceitou: {ultimo_aceitou}"
+                )
+                st.rerun()
     if st.session_state.conf_dobra:
         acao = st.session_state.conf_dobra
         proximo = fila[0]
