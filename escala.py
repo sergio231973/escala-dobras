@@ -25,7 +25,7 @@ def carregar():
         # Garantir chaves novas
         dados.setdefault("viradinha_fila", [
             "Washington", "Digones", "Anderson", "Wilian",
-            "Sergio", "Cardoso", "Daniel", "Caio"
+            "Sergio", "Cardoso", "Daniel", "Caio",
         ])
         dados.setdefault("viradinha_historico", [])
         return dados
