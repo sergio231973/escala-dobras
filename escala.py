@@ -174,16 +174,16 @@ with tab_viradinha:
                 unsafe_allow_html=True
             )
         else:
-            st.markdown(
-                f"""
-                <div style="font-size:18px">
-                    {i}º →
-                    <span style="font-size:30px">🥇</span>
-                    {nome}
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+           st.markdown(
+    f"""
+    <div style="font-size:18px">
+        {i}º →
+        <span style="font-size:30px">🥇</span>
+        {nome}<br>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
     st.divider()
 
