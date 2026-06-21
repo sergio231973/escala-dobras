@@ -16,6 +16,12 @@ def carregar():
         with open(ARQUIVO, "r", encoding="utf-8") as f:
             dados = json.load(f)
 
+        # Garantir estrutura da Viradinha Ouro
+        dados.setdefault("viradinha_fila", [
+            "Washington", "Digones", "Anderson", "Wilian",
+            "Sergio", "Cardoso", "Daniel", "Caio"
+        ])
+        dados.setdefault("viradinha_historico", [])
         # Garantir chaves novas
         dados.setdefault("viradinha_fila", [
             "Washington", "Digones", "Anderson", "Wilian",
