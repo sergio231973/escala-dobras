@@ -252,30 +252,7 @@ with tab_historico:
 # =========================
 # ABA ADMIN (MANTIDA)
 # =========================
-with tab_admin:
-    st.info("Configurações administrativas (Etapa 2 continua...)")
 st.divider()
-st.subheader("⚠️ Reset total do sistema")
-
-if st.button("🚨 RESETAR TUDO (somente admin)"):
-    dados["fila"] = [
-        "Wilian", "Sergio", "Daniel", "Caio",
-        "Washington", "Cardoso", "Digones", "Anderson"
-    ]
-
-    dados["historico"] = []
-
-    dados["viradinha_fila"] = [
-        "Washington", "Digones", "Anderson", "Wilian",
-        "Sergio", "Cardoso", "Daniel", "Caio"
-    ]
-
-    dados["viradinha_historico"] = []
-
-    salvar(dados)
-    st.success("✅ Sistema resetado completamente.")
-    st.rerun()
-    st.divider()
 st.subheader("🥇 Editar datas da Viradinha Ouro")
 
 if dados["viradinha_historico"]:
@@ -286,17 +263,19 @@ if dados["viradinha_historico"]:
 
     escolha_v = st.selectbox(
         "Escolha o registro da viradinha",
-        opcoes_v
+        opcoes_v,
+        key="select_viradinha"
     )
 
     indice_v = opcoes_v.index(escolha_v)
 
     nova_data_v = st.text_input(
         "Nova data da viradinha",
-        value=dados["viradinha_historico"][indice_v]["data"]
+        value=dados["viradinha_historico"][indice_v]["data"],
+        key="input_data_viradinha"
     )
 
-    if st.button("💾 Salvar data da viradinha"):
+    if st.button("💾 Salvar data da viradinha", key="btn_salvar_viradinha"):
         dados["viradinha_historico"][indice_v]["data"] = nova_data_v
         salvar(dados)
         st.success("✅ Data da viradinha atualizada!")
