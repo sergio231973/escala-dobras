@@ -18,8 +18,8 @@ def carregar():
 
         # Garantir estrutura da Viradinha Ouro
         dados.setdefault("viradinha_fila", [
-            "Washington", "Digones", "Anderson", "Wilian",
             "Sergio", "Cardoso", "Daniel", "Caio"
+            "Washington", "Digones", "Anderson", "Wilian",
         ])
         dados.setdefault("viradinha_historico", [])
         # Garantir chaves novas
