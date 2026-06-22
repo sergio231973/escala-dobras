@@ -1,33 +1,130 @@
 import streamlit as st
+import sqlite3
 from datetime import datetime
 
 st.set_page_config(page_title="🎮 Escalas da Equipe", page_icon="🎮")
 
-# =========================
-# CONFIGURAÇÕES
-# =========================
-SENHA_ADMIN = "1234"  # altere se quiser
+DB = "escala.db"
+SENHA_ADMIN = "1234"
 
-# =========================
-# INICIALIZAÇÃO (SESSION STATE)
-# =========================
-if "fila_dobra" not in st.session_state:
-    st.session_state.fila_dobra = [
-        "Wilian", "Sergio", "Daniel", "Caio",
-        "Washington", "Cardoso", "Digones", "Anderson"
-    ]
-    st.session_state.hist_dobra = []
+# =====================================================
+# BANCO DE DADOS
+# =====================================================
+def conectar():
+    return sqlite3.connect(DB, check_same_thread=False)
 
-if "fila_viradinha" not in st.session_state:
-    st.session_state.fila_viradinha = [
-        "Washington", "Digones", "Anderson", "Wilian",
-        "Sergio", "Cardoso", "Daniel", "Caio"
-    ]
-    st.session_state.hist_viradinha = []
+def init_db():
+    conn = conectar()
+    c = conn.cursor()
 
-# =========================
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS fila_dobra (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT
+    )""")
+
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS hist_dobra (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT,
+        acao TEXT,
+        data TEXT
+    )""")
+
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS fila_viradinha (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT
+    )""")
+
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS hist_viradinha (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT,
+        acao TEXT,
+        data TEXT
+    )""")
+
+    conn.commit()
+
+    # Popular com nomes iniciais (se vazio)
+    if c.execute("SELECT COUNT(*) FROM fila_dobra").fetchone()[0] == 0:
+        nomes = [
+            "Wilian", "Sergio", "Daniel", "Caio",
+            "Washington", "Cardoso", "Digones", "Anderson"
+        ]
+        c.executemany("INSERT INTO fila_dobra (nome) VALUES (?)", [(n,) for n in nomes])
+
+    if c.execute("SELECT COUNT(*) FROM fila_viradinha").fetchone()[0] == 0:
+        nomes = [
+            "Washington", "Digones", "Anderson", "Wilian",
+            "Sergio", "Cardoso", "Daniel", "Caio"
+        ]
+        c.executemany("INSERT INTO fila_viradinha (nome) VALUES (?)", [(n,) for n in nomes])
+
+    conn.commit()
+    conn.close()
+
+def listar(tabela):
+    conn = conectar()
+    c = conn.cursor()
+    dados = c.execute(f"SELECT nome FROM {tabela}").fetchall()
+    conn.close()
+    return [d[0] for d in dados]
+
+def mover_fila(tabela, nome):
+    conn = conectar()
+    c = conn.cursor()
+    c.execute(f"DELETE FROM {tabela} WHERE nome=?", (nome,))
+    c.execute(f"INSERT INTO {tabela} (nome) VALUES (?)", (nome,))
+    conn.commit()
+    conn.close()
+
+def inserir_hist(tabela, nome, acao):
+    conn = conectar()
+    c = conn.cursor()
+    c.execute(
+        f"INSERT INTO {tabela} (nome, acao, data) VALUES (?,?,?)",
+        (nome, acao, datetime.now().strftime("%d/%m/%Y %H:%M"))
+    )
+    conn.commit()
+    conn.close()
+
+def listar_hist(tabela):
+    conn = conectar()
+    c = conn.cursor()
+    dados = c.execute(
+        f"SELECT id, nome, acao, data FROM {tabela} ORDER BY id DESC"
+    ).fetchall()
+    conn.close()
+    return dados
+
+def atualizar_data(tabela, id_reg, nova_data):
+    conn = conectar()
+    c = conn.cursor()
+    c.execute(f"UPDATE {tabela} SET data=? WHERE id=?", (nova_data, id_reg))
+    conn.commit()
+    conn.close()
+
+def resetar_tudo():
+    conn = conectar()
+    c = conn.cursor()
+    c.execute("DELETE FROM fila_dobra")
+    c.execute("DELETE FROM hist_dobra")
+    c.execute("DELETE FROM fila_viradinha")
+    c.execute("DELETE FROM hist_viradinha")
+    conn.commit()
+    conn.close()
+    init_db()
+
+# =====================================================
+# INICIALIZAÇÃO
+# =====================================================
+init_db()
+
+# =====================================================
 # INTERFACE
-# =========================
+# =====================================================
 st.title("🎮 Escalas da Equipe")
 
 tab_dobra, tab_viradinha, tab_hist, tab_admin = st.tabs(
@@ -35,112 +132,65 @@ tab_dobra, tab_viradinha, tab_hist, tab_admin = st.tabs(
 )
 
 # =====================================================
-# 📋 DOBRA
+# DOBRA
 # =====================================================
 with tab_dobra:
-    st.subheader("👷 Escala de Dobras")
-
-    fila = st.session_state.fila_dobra
+    fila = listar("fila_dobra")
 
     for i, nome in enumerate(fila, 1):
-        if i == 1:
-            st.markdown(f"👉👷 **{nome}** (PRÓXIMO)")
-        else:
-            st.markdown(f"{i}º → 👷 {nome}")
-
-    st.divider()
+        st.write(f"{'👉👷' if i==1 else f'{i}º → 👷'} {nome}")
 
     col1, col2 = st.columns(2)
 
     if col1.button("✅ Aceitou dobra"):
-        quem = fila.pop(0)
-        fila.append(quem)
-        st.session_state.hist_dobra.insert(0, {
-            "nome": quem,
-            "acao": "aceitou",
-            "data": datetime.now().strftime("%d/%m/%Y %H:%M")
-        })
+        nome = fila[0]
+        mover_fila("fila_dobra", nome)
+        inserir_hist("hist_dobra", nome, "aceitou")
         st.rerun()
 
     if col2.button("❌ Recusou dobra"):
-        quem = fila.pop(0)
-        fila.append(quem)
-        st.session_state.hist_dobra.insert(0, {
-            "nome": quem,
-            "acao": "recusou",
-            "data": datetime.now().strftime("%d/%m/%Y %H:%M")
-        })
+        nome = fila[0]
+        mover_fila("fila_dobra", nome)
+        inserir_hist("hist_dobra", nome, "recusou")
         st.rerun()
 
-    st.divider()
-
-    if st.button("🔄 Resetar escala de dobra"):
-        ultimo_aceitou = None
-        for h in st.session_state.hist_dobra:
-            if h["acao"] == "aceitou":
-                ultimo_aceitou = h["nome"]
-                break
-
-        if ultimo_aceitou and ultimo_aceitou in fila:
-            idx = fila.index(ultimo_aceitou)
-            st.session_state.fila_dobra = fila[idx+1:] + fila[:idx+1]
-            st.success(f"Escala resetada a partir de {ultimo_aceitou}")
-            st.rerun()
-        else:
-            st.warning("Nenhuma dobra aceita ainda.")
-
 # =====================================================
-# 🥇 VIRADINHA OURO
+# VIRADINHA
 # =====================================================
 with tab_viradinha:
-    st.subheader("🥇 Viradinha Ouro")
-
-    fila = st.session_state.fila_viradinha
+    fila = listar("fila_viradinha")
 
     for i, nome in enumerate(fila, 1):
-        if i == 1:
-            st.markdown(f"👉🥇 **{nome}** (PRÓXIMO)")
-        else:
-            st.markdown(f"{i}º → 🥇 {nome}")
-
-    st.divider()
+        st.write(f"{'👉🥇' if i==1 else f'{i}º → 🥇'} {nome}")
 
     col1, col2 = st.columns(2)
 
     if col1.button("✅ Aceitou viradinha"):
-        quem = fila.pop(0)
-        fila.append(quem)
-        st.session_state.hist_viradinha.insert(0, {
-            "nome": quem,
-            "acao": "aceitou",
-            "data": datetime.now().strftime("%d/%m/%Y %H:%M")
-        })
+        nome = fila[0]
+        mover_fila("fila_viradinha", nome)
+        inserir_hist("hist_viradinha", nome, "aceitou")
         st.rerun()
 
     if col2.button("❌ Recusou viradinha"):
-        quem = fila.pop(0)
-        fila.append(quem)
-        st.session_state.hist_viradinha.insert(0, {
-            "nome": quem,
-            "acao": "recusou",
-            "data": datetime.now().strftime("%d/%m/%Y %H:%M")
-        })
+        nome = fila[0]
+        mover_fila("fila_viradinha", nome)
+        inserir_hist("hist_viradinha", nome, "recusou")
         st.rerun()
 
 # =====================================================
-# 📜 HISTÓRICO
+# HISTÓRICO
 # =====================================================
 with tab_hist:
     st.subheader("📋 Dobras")
-    for h in st.session_state.hist_dobra:
-        st.write(f"{h['nome']} — {h['acao']} — {h['data']}")
+    for _, nome, acao, data in listar_hist("hist_dobra"):
+        st.write(f"{nome} — {acao} — {data}")
 
     st.subheader("🥇 Viradinha Ouro")
-    for h in st.session_state.hist_viradinha:
-        st.write(f"{h['nome']} — {h['acao']} — {h['data']}")
+    for _, nome, acao, data in listar_hist("hist_viradinha"):
+        st.write(f"{nome} — {acao} — {data}")
 
 # =====================================================
-# 🔐 ADMIN (SÓ VOCÊ)
+# ADMIN
 # =====================================================
 with tab_admin:
     senha = st.text_input("Senha do administrador", type="password")
@@ -148,90 +198,41 @@ with tab_admin:
     if senha == SENHA_ADMIN:
         st.success("Modo administrador ativado ✅")
 
-        # ===== EDITAR DATAS DAS DOBRAS =====
-        st.subheader("📋 Editar datas das Dobras")
+        st.subheader("📅 Editar datas das Dobras")
+        hist = listar_hist("hist_dobra")
 
-        if st.session_state.hist_dobra:
-            idx_d = st.selectbox(
-                "Escolha o registro da dobra",
-                range(len(st.session_state.hist_dobra)),
-                format_func=lambda i: (
-                    f"{st.session_state.hist_dobra[i]['nome']} - "
-                    f"{st.session_state.hist_dobra[i]['data']} "
-                    f"({st.session_state.hist_dobra[i]['acao']})"
-                )
+        if hist:
+            op = st.selectbox(
+                "Registro da dobra",
+                hist,
+                format_func=lambda x: f"{x[1]} - {x[3]} ({x[2]})"
             )
-
-            nova_data_d = st.text_input(
-                "Nova data da dobra",
-                st.session_state.hist_dobra[idx_d]["data"]
-            )
-
-            if st.button("💾 Salvar data da dobra"):
-                st.session_state.hist_dobra[idx_d]["data"] = nova_data_d
-                st.success("✅ Data da dobra atualizada!")
+            nova_data = st.text_input("Nova data", op[3])
+            if st.button("Salvar data da dobra"):
+                atualizar_data("hist_dobra", op[0], nova_data)
+                st.success("Data atualizada!")
                 st.rerun()
-        else:
-            st.info("Nenhum histórico de dobra.")
 
-        st.divider()
+        st.subheader("📅 Editar datas da Viradinha")
+        histv = listar_hist("hist_viradinha")
 
-        # ===== EDITAR DATAS DA VIRADINHA =====
-        st.subheader("🥇 Editar datas da Viradinha Ouro")
-
-        if st.session_state.hist_viradinha:
-            idx_v = st.selectbox(
-                "Escolha o registro da viradinha",
-                range(len(st.session_state.hist_viradinha)),
-                format_func=lambda i: (
-                    f"{st.session_state.hist_viradinha[i]['nome']} - "
-                    f"{st.session_state.hist_viradinha[i]['data']} "
-                    f"({st.session_state.hist_viradinha[i]['acao']})"
-                )
+        if histv:
+            opv = st.selectbox(
+                "Registro da viradinha",
+                histv,
+                format_func=lambda x: f"{x[1]} - {x[3]} ({x[2]})"
             )
-
-            nova_data_v = st.text_input(
-                "Nova data da viradinha",
-                st.session_state.hist_viradinha[idx_v]["data"]
-            )
-
-            if st.button("💾 Salvar data da viradinha"):
-                st.session_state.hist_viradinha[idx_v]["data"] = nova_data_v
-                st.success("✅ Data da viradinha atualizada!")
+            nova_data_v = st.text_input("Nova data", opv[3])
+            if st.button("Salvar data da viradinha"):
+                atualizar_data("hist_viradinha", opv[0], nova_data_v)
+                st.success("Data atualizada!")
                 st.rerun()
-        else:
-            st.info("Nenhum histórico de viradinha.")
 
         st.divider()
-
-        # ===== EDITAR NOMES =====
-        st.subheader("✏️ Editar nomes")
-
-        pessoa = st.selectbox("Editar nome (Dobra)", st.session_state.fila_dobra)
-        novo_nome = st.text_input("Novo nome (Dobra)", pessoa)
-
-        if st.button("Salvar nome da dobra"):
-            i = st.session_state.fila_dobra.index(pessoa)
-            st.session_state.fila_dobra[i] = novo_nome
-            st.success("✅ Nome atualizado!")
-            st.rerun()
-
-        pessoa_v = st.selectbox("Editar nome (Viradinha)", st.session_state.fila_viradinha)
-        novo_nome_v = st.text_input("Novo nome (Viradinha)", pessoa_v)
-
-        if st.button("Salvar nome da viradinha"):
-            i = st.session_state.fila_viradinha.index(pessoa_v)
-            st.session_state.fila_viradinha[i] = novo_nome_v
-            st.success("✅ Nome atualizado!")
-            st.rerun()
-
-        st.divider()
-
-        # ===== RESET TOTAL =====
         if st.button("🚨 RESET TOTAL (ADMIN)"):
-            st.session_state.clear()
-            st.success("✅ Sistema resetado completamente.")
+            resetar_tudo()
+            st.success("Sistema resetado!")
             st.rerun()
-
     else:
         st.info("Área restrita 🔒")
+
