@@ -3,6 +3,9 @@ from datetime import datetime
 
 st.set_page_config(page_title="🎮 Escalas da Equipe", page_icon="🎮")
 
+# =========================
+# CONFIGURAÇÕES
+# =========================
 SENHA_ADMIN = "1234"  # altere se quiser
 
 # =========================
@@ -31,10 +34,12 @@ tab_dobra, tab_viradinha, tab_hist, tab_admin = st.tabs(
     ["📋 Dobra", "🥇 Viradinha Ouro", "📜 Histórico", "🔐 Admin"]
 )
 
-# =========================
-# DOBRA
-# =========================
+# =====================================================
+# 📋 DOBRA
+# =====================================================
 with tab_dobra:
+    st.subheader("👷 Escala de Dobras")
+
     fila = st.session_state.fila_dobra
 
     for i, nome in enumerate(fila, 1):
@@ -42,6 +47,8 @@ with tab_dobra:
             st.markdown(f"👉👷 **{nome}** (PRÓXIMO)")
         else:
             st.markdown(f"{i}º → 👷 {nome}")
+
+    st.divider()
 
     col1, col2 = st.columns(2)
 
@@ -65,10 +72,29 @@ with tab_dobra:
         })
         st.rerun()
 
-# =========================
-# VIRADINHA
-# =========================
+    st.divider()
+
+    if st.button("🔄 Resetar escala de dobra"):
+        ultimo_aceitou = None
+        for h in st.session_state.hist_dobra:
+            if h["acao"] == "aceitou":
+                ultimo_aceitou = h["nome"]
+                break
+
+        if ultimo_aceitou and ultimo_aceitou in fila:
+            idx = fila.index(ultimo_aceitou)
+            st.session_state.fila_dobra = fila[idx+1:] + fila[:idx+1]
+            st.success(f"Escala resetada a partir de {ultimo_aceitou}")
+            st.rerun()
+        else:
+            st.warning("Nenhuma dobra aceita ainda.")
+
+# =====================================================
+# 🥇 VIRADINHA OURO
+# =====================================================
 with tab_viradinha:
+    st.subheader("🥇 Viradinha Ouro")
+
     fila = st.session_state.fila_viradinha
 
     for i, nome in enumerate(fila, 1):
@@ -76,6 +102,8 @@ with tab_viradinha:
             st.markdown(f"👉🥇 **{nome}** (PRÓXIMO)")
         else:
             st.markdown(f"{i}º → 🥇 {nome}")
+
+    st.divider()
 
     col1, col2 = st.columns(2)
 
@@ -99,9 +127,9 @@ with tab_viradinha:
         })
         st.rerun()
 
-# =========================
-# HISTÓRICO
-# =========================
+# =====================================================
+# 📜 HISTÓRICO
+# =====================================================
 with tab_hist:
     st.subheader("📋 Dobras")
     for h in st.session_state.hist_dobra:
@@ -111,82 +139,20 @@ with tab_hist:
     for h in st.session_state.hist_viradinha:
         st.write(f"{h['nome']} — {h['acao']} — {h['data']}")
 
-# =========================
-# ADMIN (SÓ VOCÊ)
-# =========================
+# =====================================================
+# 🔐 ADMIN (SÓ VOCÊ)
+# =====================================================
 with tab_admin:
     senha = st.text_input("Senha do administrador", type="password")
 
     if senha == SENHA_ADMIN:
         st.success("Modo administrador ativado ✅")
 
-        st.subheader("✏️ Editar datas da Viradinha")
-st.divider()
-st.subheader("✏️ Editar nomes da Dobra")
+        # ===== Editar datas da Viradinha =====
+        st.subheader("📅 Editar datas da Viradinha")
 
-fila = st.session_state.fila_dobra
-
-if fila:
-    pessoa = st.selectbox(
-        "Escolha o nome da dobra",
-        fila,
-        key="select_nome_dobra"
-    )
-
-    novo_nome = st.text_input(
-        "Novo nome",
-        value=pessoa,
-        key="input_nome_dobra"
-    )
-
-    col_edit, col_del = st.columns(2)
-
-    if col_edit.button("💾 Salvar nome", key="btn_salvar_nome_dobra"):
-        idx = fila.index(pessoa)
-        fila[idx] = novo_nome
-        st.success("✅ Nome atualizado na dobra!")
-        st.rerun()
-
-    if col_del.button("❌ Remover da dobra", key="btn_remover_nome_dobra"):
-        fila.remove(pessoa)
-        st.success("✅ Nome removido da dobra!")
-        st.rerun()
-else:
-    st.info("Nenhum nome na escala de dobra.")
-    st.divider()
-st.subheader("🥇 Editar nomes da Viradinha Ouro")
-
-fila_v = st.session_state.fila_viradinha
-
-if fila_v:
-    pessoa_v = st.selectbox(
-        "Escolha o nome da viradinha",
-        fila_v,
-        key="select_nome_viradinha"
-    )
-
-    novo_nome_v = st.text_input(
-        "Novo nome",
-        value=pessoa_v,
-        key="input_nome_viradinha"
-    )
-
-    col_edit_v, col_del_v = st.columns(2)
-
-    if col_edit_v.button("💾 Salvar nome", key="btn_salvar_nome_viradinha"):
-        idx = fila_v.index(pessoa_v)
-        fila_v[idx] = novo_nome_v
-        st.success("✅ Nome atualizado na viradinha!")
-        st.rerun()
-
-    if col_del_v.button("❌ Remover da viradinha", key="btn_remover_nome_viradinha"):
-        fila_v.remove(pessoa_v)
-        st.success("✅ Nome removido da viradinha!")
-        st.rerun()
-else:
-    st.info("Nenhum nome na viradinha ouro.")
         if st.session_state.hist_viradinha:
-            op = st.selectbox(
+            idx = st.selectbox(
                 "Escolha o registro",
                 range(len(st.session_state.hist_viradinha)),
                 format_func=lambda i: f"{st.session_state.hist_viradinha[i]['nome']} - {st.session_state.hist_viradinha[i]['data']}"
@@ -194,12 +160,52 @@ else:
 
             nova_data = st.text_input(
                 "Nova data",
-                st.session_state.hist_viradinha[op]["data"]
+                st.session_state.hist_viradinha[idx]["data"]
             )
 
-            if st.button("💾 Salvar nova data"):
-                st.session_state.hist_viradinha[op]["data"] = nova_data
-                st.success("Data alterada com sucesso!")
+            if st.button("💾 Salvar data"):
+                st.session_state.hist_viradinha[idx]["data"] = nova_data
+                st.success("Data atualizada!")
                 st.rerun()
+
+        st.divider()
+
+        # ===== Editar nomes =====
+        st.subheader("✏️ Editar nomes")
+
+        pessoa = st.selectbox(
+            "Editar nome (Dobra)",
+            st.session_state.fila_dobra
+        )
+
+        novo_nome = st.text_input("Novo nome", pessoa)
+
+        if st.button("Salvar nome da dobra"):
+            i = st.session_state.fila_dobra.index(pessoa)
+            st.session_state.fila_dobra[i] = novo_nome
+            st.success("Nome atualizado!")
+            st.rerun()
+
+        pessoa_v = st.selectbox(
+            "Editar nome (Viradinha)",
+            st.session_state.fila_viradinha
+        )
+
+        novo_nome_v = st.text_input("Novo nome viradinha", pessoa_v)
+
+        if st.button("Salvar nome da viradinha"):
+            i = st.session_state.fila_viradinha.index(pessoa_v)
+            st.session_state.fila_viradinha[i] = novo_nome_v
+            st.success("Nome atualizado!")
+            st.rerun()
+
+        st.divider()
+
+        # ===== Reset total =====
+        if st.button("🚨 RESET TOTAL (ADMIN)"):
+            st.session_state.clear()
+            st.success("Sistema resetado completamente.")
+            st.rerun()
+
     else:
         st.info("Área restrita 🔒")
