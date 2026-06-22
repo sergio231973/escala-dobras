@@ -147,7 +147,33 @@ with tab_admin:
 
     if senha == SENHA_ADMIN:
         st.success("Modo administrador ativado ✅")
+        st.divider()
+st.subheader("📋 Editar datas das Dobras")
 
+if st.session_state.hist_dobra:
+    idx_dobra = st.selectbox(
+        "Escolha o registro da dobra",
+        range(len(st.session_state.hist_dobra)),
+        format_func=lambda i: (
+            f"{st.session_state.hist_dobra[i]['nome']} - "
+            f"{st.session_state.hist_dobra[i]['data']} "
+            f"({st.session_state.hist_dobra[i]['acao']})"
+        ),
+        key="select_data_dobra"
+    )
+
+    nova_data_dobra = st.text_input(
+        "Nova data da dobra",
+        st.session_state.hist_dobra[idx_dobra]["data"],
+        key="input_data_dobra"
+    )
+
+    if st.button("💾 Salvar data da dobra", key="btn_salvar_data_dobra"):
+        st.session_state.hist_dobra[idx_dobra]["data"] = nova_data_dobra
+        st.success("✅ Data da dobra atualizada!")
+        st.rerun()
+else:
+    st.info("Nenhum histórico de dobra ainda.")
         # ===== Editar datas da Viradinha =====
         st.subheader("📅 Editar datas da Viradinha")
 
