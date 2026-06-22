@@ -121,7 +121,70 @@ with tab_admin:
         st.success("Modo administrador ativado ✅")
 
         st.subheader("✏️ Editar datas da Viradinha")
+st.divider()
+st.subheader("✏️ Editar nomes da Dobra")
 
+fila = st.session_state.fila_dobra
+
+if fila:
+    pessoa = st.selectbox(
+        "Escolha o nome da dobra",
+        fila,
+        key="select_nome_dobra"
+    )
+
+    novo_nome = st.text_input(
+        "Novo nome",
+        value=pessoa,
+        key="input_nome_dobra"
+    )
+
+    col_edit, col_del = st.columns(2)
+
+    if col_edit.button("💾 Salvar nome", key="btn_salvar_nome_dobra"):
+        idx = fila.index(pessoa)
+        fila[idx] = novo_nome
+        st.success("✅ Nome atualizado na dobra!")
+        st.rerun()
+
+    if col_del.button("❌ Remover da dobra", key="btn_remover_nome_dobra"):
+        fila.remove(pessoa)
+        st.success("✅ Nome removido da dobra!")
+        st.rerun()
+else:
+    st.info("Nenhum nome na escala de dobra.")
+    st.divider()
+st.subheader("🥇 Editar nomes da Viradinha Ouro")
+
+fila_v = st.session_state.fila_viradinha
+
+if fila_v:
+    pessoa_v = st.selectbox(
+        "Escolha o nome da viradinha",
+        fila_v,
+        key="select_nome_viradinha"
+    )
+
+    novo_nome_v = st.text_input(
+        "Novo nome",
+        value=pessoa_v,
+        key="input_nome_viradinha"
+    )
+
+    col_edit_v, col_del_v = st.columns(2)
+
+    if col_edit_v.button("💾 Salvar nome", key="btn_salvar_nome_viradinha"):
+        idx = fila_v.index(pessoa_v)
+        fila_v[idx] = novo_nome_v
+        st.success("✅ Nome atualizado na viradinha!")
+        st.rerun()
+
+    if col_del_v.button("❌ Remover da viradinha", key="btn_remover_nome_viradinha"):
+        fila_v.remove(pessoa_v)
+        st.success("✅ Nome removido da viradinha!")
+        st.rerun()
+else:
+    st.info("Nenhum nome na viradinha ouro.")
         if st.session_state.hist_viradinha:
             op = st.selectbox(
                 "Escolha o registro",
