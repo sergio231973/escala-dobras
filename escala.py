@@ -147,90 +147,90 @@ with tab_admin:
 
     if senha == SENHA_ADMIN:
         st.success("Modo administrador ativado ✅")
+
+        # ===== EDITAR DATAS DAS DOBRAS =====
+        st.subheader("📋 Editar datas das Dobras")
+
+        if st.session_state.hist_dobra:
+            idx_d = st.selectbox(
+                "Escolha o registro da dobra",
+                range(len(st.session_state.hist_dobra)),
+                format_func=lambda i: (
+                    f"{st.session_state.hist_dobra[i]['nome']} - "
+                    f"{st.session_state.hist_dobra[i]['data']} "
+                    f"({st.session_state.hist_dobra[i]['acao']})"
+                )
+            )
+
+            nova_data_d = st.text_input(
+                "Nova data da dobra",
+                st.session_state.hist_dobra[idx_d]["data"]
+            )
+
+            if st.button("💾 Salvar data da dobra"):
+                st.session_state.hist_dobra[idx_d]["data"] = nova_data_d
+                st.success("✅ Data da dobra atualizada!")
+                st.rerun()
+        else:
+            st.info("Nenhum histórico de dobra.")
+
         st.divider()
-st.subheader("📋 Editar datas das Dobras")
 
-if st.session_state.hist_dobra:
-    idx_dobra = st.selectbox(
-        "Escolha o registro da dobra",
-        range(len(st.session_state.hist_dobra)),
-        format_func=lambda i: (
-            f"{st.session_state.hist_dobra[i]['nome']} - "
-            f"{st.session_state.hist_dobra[i]['data']} "
-            f"({st.session_state.hist_dobra[i]['acao']})"
-        ),
-        key="select_data_dobra"
-    )
-
-    nova_data_dobra = st.text_input(
-        "Nova data da dobra",
-        st.session_state.hist_dobra[idx_dobra]["data"],
-        key="input_data_dobra"
-    )
-
-    if st.button("💾 Salvar data da dobra", key="btn_salvar_data_dobra"):
-        st.session_state.hist_dobra[idx_dobra]["data"] = nova_data_dobra
-        st.success("✅ Data da dobra atualizada!")
-        st.rerun()
-else:
-    st.info("Nenhum histórico de dobra ainda.")
-        # ===== Editar datas da Viradinha =====
-        st.subheader("📅 Editar datas da Viradinha")
+        # ===== EDITAR DATAS DA VIRADINHA =====
+        st.subheader("🥇 Editar datas da Viradinha Ouro")
 
         if st.session_state.hist_viradinha:
-            idx = st.selectbox(
-                "Escolha o registro",
+            idx_v = st.selectbox(
+                "Escolha o registro da viradinha",
                 range(len(st.session_state.hist_viradinha)),
-                format_func=lambda i: f"{st.session_state.hist_viradinha[i]['nome']} - {st.session_state.hist_viradinha[i]['data']}"
+                format_func=lambda i: (
+                    f"{st.session_state.hist_viradinha[i]['nome']} - "
+                    f"{st.session_state.hist_viradinha[i]['data']} "
+                    f"({st.session_state.hist_viradinha[i]['acao']})"
+                )
             )
 
-            nova_data = st.text_input(
-                "Nova data",
-                st.session_state.hist_viradinha[idx]["data"]
+            nova_data_v = st.text_input(
+                "Nova data da viradinha",
+                st.session_state.hist_viradinha[idx_v]["data"]
             )
 
-            if st.button("💾 Salvar data"):
-                st.session_state.hist_viradinha[idx]["data"] = nova_data
-                st.success("Data atualizada!")
+            if st.button("💾 Salvar data da viradinha"):
+                st.session_state.hist_viradinha[idx_v]["data"] = nova_data_v
+                st.success("✅ Data da viradinha atualizada!")
                 st.rerun()
+        else:
+            st.info("Nenhum histórico de viradinha.")
 
         st.divider()
 
-        # ===== Editar nomes =====
+        # ===== EDITAR NOMES =====
         st.subheader("✏️ Editar nomes")
 
-        pessoa = st.selectbox(
-            "Editar nome (Dobra)",
-            st.session_state.fila_dobra
-        )
-
-        novo_nome = st.text_input("Novo nome", pessoa)
+        pessoa = st.selectbox("Editar nome (Dobra)", st.session_state.fila_dobra)
+        novo_nome = st.text_input("Novo nome (Dobra)", pessoa)
 
         if st.button("Salvar nome da dobra"):
             i = st.session_state.fila_dobra.index(pessoa)
             st.session_state.fila_dobra[i] = novo_nome
-            st.success("Nome atualizado!")
+            st.success("✅ Nome atualizado!")
             st.rerun()
 
-        pessoa_v = st.selectbox(
-            "Editar nome (Viradinha)",
-            st.session_state.fila_viradinha
-        )
-
-        novo_nome_v = st.text_input("Novo nome viradinha", pessoa_v)
+        pessoa_v = st.selectbox("Editar nome (Viradinha)", st.session_state.fila_viradinha)
+        novo_nome_v = st.text_input("Novo nome (Viradinha)", pessoa_v)
 
         if st.button("Salvar nome da viradinha"):
             i = st.session_state.fila_viradinha.index(pessoa_v)
             st.session_state.fila_viradinha[i] = novo_nome_v
-            st.success("Nome atualizado!")
+            st.success("✅ Nome atualizado!")
             st.rerun()
 
         st.divider()
 
-        # ===== Reset total =====
+        # ===== RESET TOTAL =====
         if st.button("🚨 RESET TOTAL (ADMIN)"):
             st.session_state.clear()
-            st.success("Sistema resetado completamente.")
+            st.success("✅ Sistema resetado completamente.")
             st.rerun()
 
     else:
