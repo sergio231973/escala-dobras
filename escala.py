@@ -5,7 +5,7 @@ from datetime import datetime
 # =========================
 # CONFIG
 # =========================
-SUPABASE_URL = "https://rkrvmdqkmmlqzjrkwch.supabase.co"
+SUPABASE_URL = "https://rkrvvmdqkmmlqzjrkwch.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJrcnZ2bWRxa21tbHF6anJrd2NoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1MDYxMjUsImV4cCI6MjA5ODA4MjEyNX0.7CjM3FYaW-bPfXnjeF8raJdNymBSNEZYfQwYCvYSklY"
 SENHA_ADMIN = "1234"
 
