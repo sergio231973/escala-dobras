@@ -25,7 +25,14 @@ def mover_fila(tabela, atual):
     supabase.table(tabela).update({"ordem": len(fila)}).eq("id", atual["id"]).execute()
 
 def registrar_hist(tabela, nome, acao):
-    def adicionar_colaborador(tabela, nome):
+    supabase.table(tabela).insert({
+        "nome": nome,
+        "acao": acao,
+        "data": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }).execute()
+
+
+def adicionar_colaborador(tabela, nome):
     fila = get_fila(tabela)
 
     ultima_ordem = len(fila) + 1
@@ -38,11 +45,6 @@ def registrar_hist(tabela, nome, acao):
 
 def remover_colaborador(tabela, nome):
     supabase.table(tabela).delete().eq("nome", nome).execute()
-    supabase.table(tabela).insert({
-        "nome": nome,
-        "acao": acao,
-        "data": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    }).execute()
 
 # =========================
 # INTERFACE
