@@ -60,7 +60,37 @@ tab_dobra, tab_viradinha, tab_hist, tab_admin = st.tabs(
 with tab_dobra:
     fila = get_fila("fila_dobra")
 
+    if fila:
+    st.markdown(f"""
+    <div style="
+    text-align:center;
+    font-size:35px;
+    color:#22c55e;
+    font-weight:bold;
+    ">
+    {fila[0]['nome']}
+    </div>
+    """, unsafe_allow_html=True)
+
     st.subheader("Fila da Dobra")
+
+    st.markdown("""
+<div style="
+background:#1e293b;
+padding:20px;
+border-radius:15px;
+text-align:center;
+border:2px solid #38bdf8;
+box-shadow: 0px 0px 15px #38bdf8;
+">
+
+<h1>👷</h1>
+
+<h2>OPERADOR DA VEZ</h2>
+
+</div>
+""", unsafe_allow_html=True)
+`
 
     for i, f in enumerate(fila):
         if i == 0:
@@ -108,11 +138,18 @@ with tab_viradinha:
             col1, col2 = st.columns(2)
 
             if col1.button("✅ Aceitar", key="vir_aceitar"):
+                with st.spinner(f"👷 {f['nome']} caminhando para a dobra..."):
+    import time
+    time.sleep(2)
                 mover_fila("fila_viradinha", f)
+
                 registrar_hist("hist_viradinha", f["nome"], "aceitou")
                 st.rerun()
 
             if col2.button("❌ Recusar", key="vir_recusar"):
+                with st.spinner(f"👷 {f['nome']} indo para o final da fila..."):
+    import time
+    time.sleep(2)
                 mover_fila("fila_viradinha", f)
                 registrar_hist("hist_viradinha", f["nome"], "recusou")
                 st.rerun()
