@@ -61,7 +61,7 @@ with tab_dobra:
     fila = get_fila("fila_dobra")
 
     if fila:
-    st.markdown(f"""
+        st.markdown(f"""
     <div style="
     text-align:center;
     font-size:35px;
@@ -90,7 +90,7 @@ box-shadow: 0px 0px 15px #38bdf8;
 
 </div>
 """, unsafe_allow_html=True)
-`
+
 
     for i, f in enumerate(fila):
         if i == 0:
@@ -138,24 +138,28 @@ with tab_viradinha:
             col1, col2 = st.columns(2)
 
             if col1.button("✅ Aceitar", key="vir_aceitar"):
-                with st.spinner(f"👷 {f['nome']} caminhando para a dobra..."):
-    import time
-    time.sleep(2)
-                mover_fila("fila_viradinha", f)
+                import time
 
+                with st.spinner(f"👷 {f['nome']} caminhando para a dobra..."):
+                    time.sleep(2)
+
+                mover_fila("fila_viradinha", f)
                 registrar_hist("hist_viradinha", f["nome"], "aceitou")
                 st.rerun()
 
             if col2.button("❌ Recusar", key="vir_recusar"):
+                import time
+
                 with st.spinner(f"👷 {f['nome']} indo para o final da fila..."):
-    import time
-    time.sleep(2)
+                    time.sleep(2)
+
                 mover_fila("fila_viradinha", f)
                 registrar_hist("hist_viradinha", f["nome"], "recusou")
                 st.rerun()
+
         else:
             st.write(f"{i+1}º → 🥇 {f['nome']}")
-
+            
 # =========================
 # HISTÓRICO
 # =========================
@@ -174,48 +178,48 @@ with tab_hist:
 with tab_admin:
     senha = st.text_input("Senha do administrador", type="password")
 
-if senha == SENHA_ADMIN:
-    st.success("Modo administrador ativado ✅")
+    if senha == SENHA_ADMIN:
+        st.success("Modo administrador ativado ✅")
 
-    st.subheader("👥 Gerenciar Colaboradores")
+        st.subheader("👥 Gerenciar Colaboradores")
 
-    tabela_escolhida = st.selectbox(
-        "Escala",
-        ["fila_dobra", "fila_viradinha"]
-    )
+        tabela_escolhida = st.selectbox(
+            "Escala",
+            ["fila_dobra", "fila_viradinha"]
+        )
 
-    novo_nome = st.text_input("Nome do colaborador")
+        novo_nome = st.text_input("Nome do colaborador")
 
-    col1, col2 = st.columns(2)
+        col1, col2 = st.columns(2)
 
-    with col1:
-        if st.button("➕ Adicionar Colaborador"):
-            if novo_nome:
-                adicionar_colaborador(
-                    tabela_escolhida,
-                    novo_nome
-                )
-                st.success(f"{novo_nome} adicionado ao fim da fila.")
-                st.rerun()
+        with col1:
+            if st.button("➕ Adicionar Colaborador"):
+                if novo_nome:
+                    adicionar_colaborador(
+                        tabela_escolhida,
+                        novo_nome
+                    )
+                    st.success(f"{novo_nome} adicionado ao fim da fila.")
+                    st.rerun()
 
-    with col2:
-        if st.button("➖ Remover Colaborador"):
-            if novo_nome:
-                remover_colaborador(
-                    tabela_escolhida,
-                    novo_nome
-                )
-                st.success(f"{novo_nome} removido.")
-                st.rerun()
+        with col2:
+            if st.button("➖ Remover Colaborador"):
+                if novo_nome:
+                    remover_colaborador(
+                        tabela_escolhida,
+                        novo_nome
+                    )
+                    st.success(f"{novo_nome} removido.")
+                    st.rerun()
 
-    st.divider()
+        st.divider()
 
-    if st.button("🚨 RESETAR HISTÓRICOS"):
-        supabase.table("hist_dobra").delete().neq("id", 0).execute()
-        supabase.table("hist_viradinha").delete().neq("id", 0).execute()
-        supabase.table("dobra_hoje").delete().neq("id", 0).execute()
-        st.success("Históricos limpos.")
-        st.rerun()
+        if st.button("🚨 RESETAR HISTÓRICOS"):
+            supabase.table("hist_dobra").delete().neq("id", 0).execute()
+            supabase.table("hist_viradinha").delete().neq("id", 0).execute()
+            supabase.table("dobra_hoje").delete().neq("id", 0).execute()
+            st.success("Históricos limpos.")
+            st.rerun()
 
     else:
         st.info("Área restrita 🔒")
