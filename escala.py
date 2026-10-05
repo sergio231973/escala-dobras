@@ -20,9 +20,23 @@ def get_fila(tabela):
 
 def mover_fila(tabela, atual):
     fila = get_fila(tabela)
-    for f in fila:
-        supabase.table(tabela).update({"ordem": f["ordem"] - 1}).eq("id", f["id"]).execute()
-    supabase.table(tabela).update({"ordem": len(fila)}).eq("id", atual["id"]).execute()
+
+    # Remove o atual da lista
+    fila_sem_atual = [
+        f for f in fila
+        if f["id"] != atual["id"]
+    ]
+
+    # Reorganiza a fila
+    for i, f in enumerate(fila_sem_atual, start=1):
+        supabase.table(tabela).update({
+            "ordem": i
+        }).eq("id", f["id"]).execute()
+
+    # Coloca o atual no final
+    supabase.table(tabela).update({
+        "ordem": len(fila)
+    }).eq("id", atual["id"]).execute()
 
 def registrar_hist(tabela, nome, acao):
     supabase.table(tabela).insert({
