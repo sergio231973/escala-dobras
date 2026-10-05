@@ -58,11 +58,20 @@ def adicionar_colaborador(tabela, nome):
 
 
 def remover_colaborador(tabela, nome):
+
     supabase.table(tabela).delete().eq("nome", nome).execute()
 
+    fila = get_fila(tabela)
+
+    for i, f in enumerate(fila, start=1):
+        supabase.table(tabela).update({
+            "ordem": i
+        }).eq("id", f["id"]).execute()
+        
 # =========================
 # INTERFACE
 # =========================
+
 st.title("🎮 Escalas da Equipe")
 tab_dobra, tab_viradinha, tab_hist, tab_admin = st.tabs(
     ["📋 Dobra", "🥇 Viradinha Ouro", "📜 Histórico", "🔐 Admin"]
