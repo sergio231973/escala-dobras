@@ -107,8 +107,9 @@ with tab_dobra:
             st.write(f"{i+1}º → 👷 {f['nome']}")
 
     st.divider()
-    st.subheader(
-    ficaram = supabase.table("dobra_hoje").select("*").execute().data
+    st.divider()
+
+ficaram = supabase.table("dobra_hoje").select("*").execute().data
 
 st.subheader(f"📌 Ficaram na dobra de hoje ({len(ficaram)})")
     if ficaram:
