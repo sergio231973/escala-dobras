@@ -111,15 +111,16 @@ with tab_dobra:
 ficaram = supabase.table("dobra_hoje").select("*").execute().data
 
 st.subheader(f"📌 Ficaram na dobra de hoje ({len(ficaram)})")
-    if ficaram:
-        for p in ficaram:
-            st.write(f"👷 {p['nome']}")
-    else:
-        st.write("—")
 
-    if st.button("🧹 Limpar lista da dobra de hoje"):
-        supabase.table("dobra_hoje").delete().neq("id", 0).execute()
-        st.rerun()
+if ficaram:
+    for p in ficaram:
+        st.write(f"👷 {p['nome']}")
+else:
+    st.write("—")
+
+if st.button("🧹 Limpar lista da dobra de hoje"):
+    supabase.table("dobra_hoje").delete().neq("id", 0).execute()
+    st.rerun()
 
 # =========================
 # VIRADINHA OURO
