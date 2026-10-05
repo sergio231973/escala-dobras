@@ -110,9 +110,7 @@ with tab_dobra:
     st.subheader(
     ficaram = supabase.table("dobra_hoje").select("*").execute().data
 
-st.subheader(
-    f"📌 Ficaram na dobra de hoje ({len(ficaram)})"
-)
+st.subheader(f"📌 Ficaram na dobra de hoje ({len(ficaram)})")
     if ficaram:
         for p in ficaram:
             st.write(f"👷 {p['nome']}")
