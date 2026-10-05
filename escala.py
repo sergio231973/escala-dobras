@@ -84,10 +84,8 @@ with tab_dobra:
     fila = get_fila("fila_dobra")
 
     st.subheader("Fila da Dobra")
-    
-    st.info(f"👷 Próximo da fila: {fila[0]['nome']}")
 
-    st.success(f"👷 Operador da Vez: {fila[0]['nome']}")
+    st.success(f"🎯 Operador da Vez: {fila[0]['nome']}")
 
 
     for i, f in enumerate(fila):
@@ -110,9 +108,11 @@ with tab_dobra:
 
     st.divider()
     st.subheader(
+    ficaram = supabase.table("dobra_hoje").select("*").execute().data
+
+st.subheader(
     f"📌 Ficaram na dobra de hoje ({len(ficaram)})"
 )
-    ficaram = supabase.table("dobra_hoje").select("*").execute().data
     if ficaram:
         for p in ficaram:
             st.write(f"👷 {p['nome']}")
