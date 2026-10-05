@@ -83,36 +83,11 @@ tab_dobra, tab_viradinha, tab_hist, tab_admin = st.tabs(
 with tab_dobra:
     fila = get_fila("fila_dobra")
 
-    if fila:
-        st.markdown(f"""
-    <div style="
-    text-align:center;
-    font-size:35px;
-    color:#22c55e;
-    font-weight:bold;
-    ">
-    {fila[0]['nome']}
-    </div>
-    """, unsafe_allow_html=True)
-
     st.subheader("Fila da Dobra")
+    
+    st.info(f"👷 Próximo da fila: {fila[0]['nome']}")
 
-    st.markdown("""
-<div style="
-background:#1e293b;
-padding:20px;
-border-radius:15px;
-text-align:center;
-border:2px solid #38bdf8;
-box-shadow: 0px 0px 15px #38bdf8;
-">
-
-<h1>👷</h1>
-
-<h2>OPERADOR DA VEZ</h2>
-
-</div>
-""", unsafe_allow_html=True)
+    st.success(f"👷 Operador da Vez: {fila[0]['nome']}")
 
 
     for i, f in enumerate(fila):
@@ -134,8 +109,9 @@ box-shadow: 0px 0px 15px #38bdf8;
             st.write(f"{i+1}º → 👷 {f['nome']}")
 
     st.divider()
-    st.subheader("📌 Ficaram na dobra de hoje")
-
+    st.subheader(
+    f"📌 Ficaram na dobra de hoje ({len(ficaram)})"
+)
     ficaram = supabase.table("dobra_hoje").select("*").execute().data
     if ficaram:
         for p in ficaram:
