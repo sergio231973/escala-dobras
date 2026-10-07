@@ -68,6 +68,7 @@ def remover_colaborador(tabela, nome):
             "ordem": i
         }).eq("id", f["id"]).execute()
 
+    return True
 
 def obter_ultima_movimentacao():
 
@@ -143,12 +144,12 @@ with tab_dobra:
 
 ultima = obter_ultima_movimentacao()
 
-st.subheader("📌 Última Movimentação")
+st.subheader("📋 Última Dobra Registrada")
 
 if ultima:
-    st.write(f"👷 {ultima['nome']}")
-    st.write(f"{ultima['tipo']}")
-    st.write(f"🕒 {ultima['data']}")
+    st.write(f"👷 Operador: {ultima['nome']}")
+    st.write(f"📋 Evento: {ultima['tipo']}")
+    st.write(f"🕒 Data/Hora: {ultima['data']}")
 else:
     st.write("Nenhuma movimentação registrada.")
 
