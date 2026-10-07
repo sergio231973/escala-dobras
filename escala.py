@@ -59,6 +59,38 @@ def adicionar_colaborador(tabela, nome):
 
 def remover_colaborador(tabela, nome):
 
+def obter_ultima_movimentacao():
+
+    ultima_dobra = supabase.table(
+        "hist_dobra"
+    ).select("*").order("id", desc=True).limit(1).execute().data
+
+    ultima_vir = supabase.table(
+        "hist_viradinha"
+    ).select("*").order("id", desc=True).limit(1).execute().data
+
+    registros = []
+
+    if ultima_dobra:
+        ultimo = ultima_dobra[0]
+        ultimo["tipo"] = "📋 Dobra"
+        registros.append(ultimo)
+
+    if ultima_vir:
+        ultimo = ultima_vir[0]
+        ultimo["tipo"] = "🏆 Viradinha Ouro"
+        registros.append(ultimo)
+
+    if not registros:
+        return None
+
+    registros.sort(
+        key=lambda x: x["data"],
+        reverse=True
+    )
+
+    return registros[0]    
+
     supabase.table(tabela).delete().eq("nome", nome).execute()
 
     fila = get_fila(tabela)
@@ -108,9 +140,16 @@ with tab_dobra:
 
     st.divider()
 
-ficaram = supabase.table("dobra_hoje").select("*").execute().data
+ultima = obter_ultima_movimentacao()
 
-st.subheader(f"📌 Ficaram na dobra de hoje ({len(ficaram)})")
+st.subheader("📌 Última Movimentação")
+
+if ultima:
+    st.write(f"👷 {ultima['nome']}")
+    st.write(f"{ultima['tipo']}")
+    st.write(f"🕒 {ultima['data']}")
+else:
+    st.write("Nenhuma movimentação registrada.")
 
 if ficaram:
     for p in ficaram:
