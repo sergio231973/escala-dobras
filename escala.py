@@ -152,12 +152,6 @@ if ultima:
 else:
     st.write("Nenhuma movimentação registrada.")
 
-if ficaram:
-    for p in ficaram:
-        st.write(f"👷 {p['nome']}")
-else:
-    st.write("—")
-
 if st.button("🧹 Limpar lista da dobra de hoje"):
     supabase.table("dobra_hoje").delete().neq("id", 0).execute()
     st.rerun()
