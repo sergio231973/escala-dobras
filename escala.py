@@ -59,6 +59,16 @@ def adicionar_colaborador(tabela, nome):
 
 def remover_colaborador(tabela, nome):
 
+    supabase.table(tabela).delete().eq("nome", nome).execute()
+
+    fila = get_fila(tabela)
+
+    for i, f in enumerate(fila, start=1):
+        supabase.table(tabela).update({
+            "ordem": i
+        }).eq("id", f["id"]).execute()
+
+
 def obter_ultima_movimentacao():
 
     ultima_dobra = supabase.table(
@@ -89,16 +99,7 @@ def obter_ultima_movimentacao():
         reverse=True
     )
 
-    return registros[0]    
-
-    supabase.table(tabela).delete().eq("nome", nome).execute()
-
-    fila = get_fila(tabela)
-
-    for i, f in enumerate(fila, start=1):
-        supabase.table(tabela).update({
-            "ordem": i
-        }).eq("id", f["id"]).execute()
+    return registros[0]
         
 # =========================
 # INTERFACE
