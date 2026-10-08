@@ -169,6 +169,25 @@ with tab_viradinha:
         f"🏆 Operador da Viradinha: {fila[0]['nome']}"
     )
     for i, f in enumerate(fila):
+            st.divider()
+
+    ultima_vir = supabase.table(
+        "hist_viradinha"
+    ).select("*").order(
+        "id",
+        desc=True
+    ).limit(1).execute().data
+
+    st.subheader("🏆 Última Viradinha Ouro")
+
+    if ultima_vir:
+        ultima = ultima_vir[0]
+
+        st.write(f"👷 Operador: {ultima['nome']}")
+        st.write(f"📋 Evento: {ultima['acao']}")
+        st.write(f"🕒 Data/Hora: {ultima['data']}")
+    else:
+        st.write("Nenhuma Viradinha registrada.")
         if i == 0:
             st.markdown(f"👉🥇 **{f['nome']}**")
             col1, col2 = st.columns(2)
