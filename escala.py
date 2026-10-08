@@ -153,10 +153,6 @@ if ultima:
 else:
     st.write("Nenhuma movimentação registrada.")
 
-if st.button("🧹 Limpar lista da dobra de hoje"):
-    supabase.table("dobra_hoje").delete().neq("id", 0).execute()
-    st.rerun()
-
 # =========================
 # VIRADINHA OURO
 # =========================
