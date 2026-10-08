@@ -140,18 +140,18 @@ with tab_dobra:
         else:
             st.write(f"{i+1}º → 👷 {f['nome']}")
 
-    st.divider()
+            st.divider()
 
-ultima = obter_ultima_movimentacao()
+            ultima = obter_ultima_movimentacao()
 
-st.subheader("📋 Última Dobra Registrada")
+            st.subheader("📋 Última Dobra Registrada")
 
-if ultima:
-    st.write(f"👷 Operador: {ultima['nome']}")
-    st.write(f"📋 Evento: {ultima['tipo']}")
-    st.write(f"🕒 Data/Hora: {ultima['data']}")
-else:
-    st.write("Nenhuma movimentação registrada.")
+            if ultima:
+                st.write(f"👷 Operador: {ultima['nome']}")
+                st.write(f"📋 Evento: {ultima['tipo']}")
+                st.write(f"🕒 Data/Hora: {ultima['data']}")
+            else:
+                st.write("Nenhuma movimentação registrada.")
 
 # =========================
 # VIRADINHA OURO
