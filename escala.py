@@ -159,10 +159,7 @@ else:
 with tab_viradinha:
     fila = get_fila("fila_viradinha")
 
-    st.write(fila)
-
     st.subheader("Viradinha Ouro")
-
 
     for i, f in enumerate(fila):
         if i == 0:
