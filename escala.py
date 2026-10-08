@@ -168,8 +168,50 @@ with tab_viradinha:
     st.success(
         f"🏆 Operador da Viradinha: {fila[0]['nome']}"
     )
+
     for i, f in enumerate(fila):
-            st.divider()
+
+        if i == 0:
+            st.markdown(f"👉🥇 **{f['nome']}**")
+
+            col1, col2 = st.columns(2)
+
+            if col1.button("✅ Aceitar", key="vir_aceitar"):
+                import time
+
+                with st.spinner(
+                    f"👷 {f['nome']} caminhando para a dobra..."
+                ):
+                    time.sleep(2)
+
+                mover_fila("fila_viradinha", f)
+                registrar_hist(
+                    "hist_viradinha",
+                    f["nome"],
+                    "aceitou"
+                )
+                st.rerun()
+
+            if col2.button("❌ Recusar", key="vir_recusar"):
+                import time
+
+                with st.spinner(
+                    f"👷 {f['nome']} indo para o final da fila..."
+                ):
+                    time.sleep(2)
+
+                mover_fila("fila_viradinha", f)
+                registrar_hist(
+                    "hist_viradinha",
+                    f["nome"],
+                    "recusou"
+                )
+                st.rerun()
+
+        else:
+            st.write(f"{i+1}º → 🥇 {f['nome']}")
+
+    st.divider()
 
     ultima_vir = supabase.table(
         "hist_viradinha"
@@ -188,32 +230,6 @@ with tab_viradinha:
         st.write(f"🕒 Data/Hora: {ultima['data']}")
     else:
         st.write("Nenhuma Viradinha registrada.")
-        if i == 0:
-            st.markdown(f"👉🥇 **{f['nome']}**")
-            col1, col2 = st.columns(2)
-
-            if col1.button("✅ Aceitar", key="vir_aceitar"):
-                import time
-
-                with st.spinner(f"👷 {f['nome']} caminhando para a dobra..."):
-                    time.sleep(2)
-
-                mover_fila("fila_viradinha", f)
-                registrar_hist("hist_viradinha", f["nome"], "aceitou")
-                st.rerun()
-
-            if col2.button("❌ Recusar", key="vir_recusar"):
-                import time
-
-                with st.spinner(f"👷 {f['nome']} indo para o final da fila..."):
-                    time.sleep(2)
-
-                mover_fila("fila_viradinha", f)
-                registrar_hist("hist_viradinha", f["nome"], "recusou")
-                st.rerun()
-
-        else:
-            st.write(f"{i+1}º → 🥇 {f['nome']}")
             
 # =========================
 # HISTÓRICO
