@@ -153,6 +153,9 @@ with tab_dobra:
         st.write(f"👷 Operador: {ultima['nome']}")
         st.write(f"📋 Evento: {ultima['tipo']}")
         st.write(f"🕒 Data/Hora: {ultima['data']}")
+    if st.button("🧹 Limpar Última Dobra"):
+    st.rerun()
+    
     else:
         st.write("Nenhuma movimentação registrada.")
 
@@ -164,6 +167,9 @@ with tab_viradinha:
 
     st.subheader("Viradinha Ouro")
 
+    st.success(
+        f"🏆 Operador da Viradinha: {fila[0]['nome']}"
+    )
     for i, f in enumerate(fila):
         if i == 0:
             st.markdown(f"👉🥇 **{f['nome']}**")
