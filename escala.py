@@ -153,8 +153,6 @@ with tab_dobra:
         st.write(f"👷 Operador: {ultima['nome']}")
         st.write(f"📋 Evento: {ultima['tipo']}")
         st.write(f"🕒 Data/Hora: {ultima['data']}")
-    if st.button("🧹 Limpar Última Dobra"):
-    st.rerun()
     
     else:
         st.write("Nenhuma movimentação registrada.")
