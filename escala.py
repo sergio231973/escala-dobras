@@ -121,37 +121,40 @@ with tab_dobra:
 
     st.success(f"🎯 Operador da Vez: {fila[0]['nome']}")
 
-
     for i, f in enumerate(fila):
         if i == 0:
             st.markdown(f"👉👷 **{f['nome']}**")
+
             col1, col2 = st.columns(2)
 
             if col1.button("✅ Aceitar", key="dobra_aceitar"):
                 mover_fila("fila_dobra", f)
                 registrar_hist("hist_dobra", f["nome"], "aceitou")
-                supabase.table("dobra_hoje").insert({"nome": f["nome"]}).execute()
+                supabase.table("dobra_hoje").insert(
+                    {"nome": f["nome"]}
+                ).execute()
                 st.rerun()
 
             if col2.button("❌ Recusar", key="dobra_recusar"):
                 mover_fila("fila_dobra", f)
                 registrar_hist("hist_dobra", f["nome"], "recusou")
                 st.rerun()
+
         else:
             st.write(f"{i+1}º → 👷 {f['nome']}")
 
     st.divider()
 
-     ultima = obter_ultima_movimentacao()
+    ultima = obter_ultima_movimentacao()
 
-     st.subheader("📋 Última Dobra Registrada")
+    st.subheader("📋 Última Dobra Registrada")
 
-     if ultima:
-         st.write(f"👷 Operador: {ultima['nome']}")
-         st.write(f"📋 Evento: {ultima['tipo']}")
-         st.write(f"🕒 Data/Hora: {ultima['data']}")
-     else:
-         st.write("Nenhuma movimentação registrada.")
+    if ultima:
+        st.write(f"👷 Operador: {ultima['nome']}")
+        st.write(f"📋 Evento: {ultima['tipo']}")
+        st.write(f"🕒 Data/Hora: {ultima['data']}")
+    else:
+        st.write("Nenhuma movimentação registrada.")
 
 # =========================
 # VIRADINHA OURO
