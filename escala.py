@@ -148,8 +148,13 @@ with tab_dobra:
     ultima = obter_ultima_movimentacao()
 
     st.subheader("📋 Última Dobra Registrada")
+    mostrar_ultima = st.checkbox(
+    "Mostrar última dobra registrada",
+    value=True
+)
+    
 
-    if ultima:
+    if mostrar_ultima and ultima:
         st.write(f"👷 Operador: {ultima['nome']}")
         st.write(f"📋 Evento: {ultima['tipo']}")
         st.write(f"🕒 Data/Hora: {ultima['data']}")
