@@ -145,24 +145,31 @@ with tab_dobra:
 
     st.divider()
 
-ficaram = supabase.table("dobra_hoje").select("*").execute().data
+    st.divider()
 
-if ficaram:
+    ficaram = supabase.table(
+        "dobra_hoje"
+    ).select("*").execute().data
 
-    st.subheader("📌 Ficaram na Dobra de Hoje")
+    if ficaram:
 
-    for p in ficaram:
-        st.write(f"👷 {p['nome']}")
+        st.subheader("📌 Ficaram na Dobra de Hoje")
 
-    if st.button("🧹 Limpar Lista da Dobra"):
-        supabase.table("dobra_hoje").delete().neq("id", 0).execute()
-        st.rerun()
+        for p in ficaram:
+            st.write(f"👷 {p['nome']}")
 
-else:
+        if st.button("🧹 Limpar Lista da Dobra"):
+            supabase.table(
+                "dobra_hoje"
+            ).delete().neq("id", 0).execute()
 
-    st.subheader("📌 Ficaram na Última Dobra")
+            st.rerun()
 
-    st.write("—")
+    else:
+
+        st.subheader("📌 Ficaram na Última Dobra")
+
+        st.write("—")
 
 
 # =========================
@@ -219,7 +226,7 @@ with tab_viradinha:
         else:
             st.write(f"{i+1}º → 🥇 {f['nome']}")
 
-    st.divider()
+        st.divider()
 
     viradinha_hoje = supabase.table(
         "hist_viradinha"
