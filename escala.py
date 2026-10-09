@@ -219,29 +219,25 @@ with tab_viradinha:
         else:
             st.write(f"{i+1}º → 🥇 {f['nome']}")
 
-    st.divider()
+       st.divider()
 
-   viradinha_hoje = supabase.table(
-    "hist_viradinha"
-).select("*").order(
-    "id",
-    desc=True
-*.limit(10).execute().data
+    viradinha_hoje = supabase.table(
+        "hist_viradinha"
+    ).select("*").order(
+        "id",
+        desc=True
+    ).limit(10).execute().data
 
-st.sub*eader("🏆 Última Viradinha Ouro*)
+    st.subheader("🏆 Última Viradinha Ouro")
 
-*f viradinha_hoje:
+    if viradinha_hoje:
 
-    for v in vi*adinha_hoje[:5]:
-        if v["acao"] == "aceitou":
-            st*write(f"*� {v['nome']}")
+        for v in viradinha_hoje[:5]:
+            if v["acao"] == "aceitou":
+                st.write(f"🥇 {v['nome']}")
 
-    if st.button(*🧹 Limpar Lista da Viradinha"):
-  *     supabase.table("hist_viradinh*").delete().neq("id", 0).execute()*        st.rerun()
-
-else:
-
-    st.*rite("—")
+    else:
+        st.write("—")
             
 # =========================
 # HISTÓRICO
