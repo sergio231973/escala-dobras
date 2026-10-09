@@ -145,22 +145,25 @@ with tab_dobra:
 
     st.divider()
 
-    ultima = obter_ultima_movimentacao()
+ficaram = supabase.table("dobra_hoje").select("*").execute().data
 
-    st.subheader("📋 Última Dobra Registrada")
-    mostrar_ultima = st.checkbox(
-    "Mostrar última dobra registrada",
-    value=True
-)
-    
+if ficaram:
 
-    if mostrar_ultima and ultima:
-        st.write(f"👷 Operador: {ultima['nome']}")
-        st.write(f"📋 Evento: {ultima['tipo']}")
-        st.write(f"🕒 Data/Hora: {ultima['data']}")
-    
-    else:
-        st.write("Nenhuma movimentação registrada.")
+    st.subheader("📌 Ficaram na Dobra de Hoje")
+
+    for p in ficaram:
+        st.write(f"👷 {p['nome']}")
+
+    if st.button("🧹 Limpar Lista da Dobra"):
+        supabase.table("dobra_hoje").delete().neq("id", 0).execute()
+        st.rerun()
+
+else:
+
+    st.subheader("📌 Ficaram na Última Dobra")
+
+    st.write("—")
+
 
 # =========================
 # VIRADINHA OURO
@@ -218,23 +221,27 @@ with tab_viradinha:
 
     st.divider()
 
-    ultima_vir = supabase.table(
-        "hist_viradinha"
-    ).select("*").order(
-        "id",
-        desc=True
-    ).limit(1).execute().data
+   viradinha_hoje = supabase.table(
+    "hist_viradinha"
+).select("*").order(
+    "id",
+    desc=True
+*.limit(10).execute().data
 
-    st.subheader("🏆 Última Viradinha Ouro")
+st.sub*eader("🏆 Última Viradinha Ouro*)
 
-    if ultima_vir:
-        ultima = ultima_vir[0]
+*f viradinha_hoje:
 
-        st.write(f"👷 Operador: {ultima['nome']}")
-        st.write(f"📋 Evento: {ultima['acao']}")
-        st.write(f"🕒 Data/Hora: {ultima['data']}")
-    else:
-        st.write("Nenhuma Viradinha registrada.")
+    for v in vi*adinha_hoje[:5]:
+        if v["acao"] == "aceitou":
+            st*write(f"*� {v['nome']}")
+
+    if st.button(*🧹 Limpar Lista da Viradinha"):
+  *     supabase.table("hist_viradinh*").delete().neq("id", 0).execute()*        st.rerun()
+
+else:
+
+    st.*rite("—")
             
 # =========================
 # HISTÓRICO
