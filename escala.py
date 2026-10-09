@@ -219,22 +219,22 @@ with tab_viradinha:
         else:
             st.write(f"{i+1}º → 🥇 {f['nome']}")
 
-       st.divider()
+          st.divider()
 
-       viradinha_hoje = supabase.table(
-           "hist_viradinha"
-       ).select("*").order(
-           "id",
-           desc=True
-       ).limit(10).execute().data
+    viradinha_hoje = supabase.table(
+        "hist_viradinha"
+    ).select("*").order(
+        "id",
+        desc=True
+    ).limit(10).execute().data
 
-       st.subheader("🏆 Última Viradinha Ouro")
+    st.subheader("🏆 Última Viradinha Ouro")
 
-       if viradinha_hoje:
+    if viradinha_hoje:
 
-           for v in viradinha_hoje[:5]:
-               if v["acao"] == "aceitou":
-                   st.write(f"🥇 {v['nome']}")
+        for v in viradinha_hoje[:5]:
+            if v["acao"] == "aceitou":
+                st.write(f"🥇 {v['nome']}")
 
     else:
         st.write("—")
