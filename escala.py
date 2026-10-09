@@ -219,7 +219,7 @@ with tab_viradinha:
         else:
             st.write(f"{i+1}º → 🥇 {f['nome']}")
 
-  st.divider()
+    st.divider()
 
     viradinha_hoje = supabase.table(
         "hist_viradinha"
