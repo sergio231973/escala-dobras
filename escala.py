@@ -200,11 +200,18 @@ with tab_viradinha:
                     time.sleep(2)
 
                 mover_fila("fila_viradinha", f)
-                registrar_hist(
-                    "hist_viradinha",
-                    f["nome"],
-                    "aceitou"
+
+                registrar_hist("hist_viradinha",
+                               f["nome"],
+                               "aceitou"
                 )
+
+                supabase.table(
+                    "viradinha_hoje"
+                ).insert({
+                    "nome": f["nome"]
+                }).execute()
+
                 st.rerun()
 
             if col2.button("❌ Recusar", key="vir_recusar"):
@@ -226,22 +233,32 @@ with tab_viradinha:
         else:
             st.write(f"{i+1}º → 🥇 {f['nome']}")
 
-        st.divider()
+            st.divider()
 
-    viradinha_hoje = supabase.table(
-        "hist_viradinha"
-    ).select("*").order(
-        "id",
-        desc=True
-    ).limit(10).execute().data
+    viradinha = supabase.table(
+        "viradinha_hoje"
+    ).select("*").execute().data
 
-    st.subheader("🏆 Última Viradinha Ouro")
+    st.subheader(
+        "🏆 Ficaram na Última Viradinha Ouro"
+    )
 
-    if viradinha_hoje:
+    if viradinha:
 
-        for v in viradinha_hoje[:5]:
-            if v["acao"] == "aceitou":
-                st.write(f"🥇 {v['nome']}")
+        for v in viradinha:
+            st.write(f"🥇 {v['nome']}")
+
+        if st.button(
+            "🧹 Limpar Lista da Viradinha"
+        ):
+            supabase.table(
+                "viradinha_hoje"
+            ).delete().neq(
+                "id",
+                0
+            ).execute()
+
+            st.rerun()
 
     else:
         st.write("—")
