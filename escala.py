@@ -144,8 +144,7 @@ with tab_dobra:
             st.write(f"{i+1}º → 👷 {f['nome']}")
 
     st.divider()
-
-    st.divider()
+    
 
     ficaram = supabase.table(
         "dobra_hoje"
@@ -233,7 +232,7 @@ with tab_viradinha:
         else:
             st.write(f"{i+1}º → 🥇 {f['nome']}")
 
-            st.divider()
+    st.divider()
 
     viradinha = supabase.table(
         "viradinha_hoje"
