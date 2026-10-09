@@ -180,9 +180,8 @@ with tab_viradinha:
     st.subheader("Viradinha Ouro")
 
     st.success(
-        f"🏆 Operador da Viradinha: {fila[0]['nome']}"
+    f"🏆 Operador da Vez: {fila[0]['nome']}"
     )
-
     for i, f in enumerate(fila):
 
         if i == 0:
@@ -238,8 +237,8 @@ with tab_viradinha:
         "viradinha_hoje"
     ).select("*").execute().data
 
-    st.subheader(
-        "🏆 Ficaram na Última Viradinha Ouro"
+    st.success(
+        f"🏆 Operador da Vez: {fila[0]['nome']}"
     )
 
     if viradinha:
