@@ -156,7 +156,7 @@ with tab_dobra:
     st.divider()
 
 
-        ficaram = supabase.table(
+    ficaram = supabase.table(
         "dobra_hoje"
     ).select("*").execute().data
 
