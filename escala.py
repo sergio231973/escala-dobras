@@ -156,32 +156,36 @@ with tab_dobra:
     st.divider()
 
 
-            if ficaram:
+        ficaram = supabase.table(
+        "dobra_hoje"
+    ).select("*").execute().data
 
-                data_dobra = str(ficaram[-1]["Dados"])[:10]
+    if ficaram:
 
-                hoje = datetime.now().strftime("%Y-%m-%d")
+        data_dobra = str(ficaram[-1]["Dados"])[:10]
 
-                if data_dobra == hoje:
-                    st.subheader("📌 Ficaram na Dobra de Hoje")
-                else:
-                    st.subheader("📌 Ficaram na Última Dobra")
+        hoje = datetime.now().strftime("%Y-%m-%d")
 
-                for p in ficaram:
-                    st.write(f"👷 {p['nome']}")
+        if data_dobra == hoje:
+            st.subheader("📌 Ficaram na Dobra de Hoje")
+        else:
+            st.subheader("📌 Ficaram na Última Dobra")
 
-                if st.button("🧹 Limpar Lista da Dobra"):
-                    supabase.table(
-                        "dobra_hoje"
-                    ).delete().neq("id", 0).execute()
+        for p in ficaram:
+            st.write(f"👷 {p['nome']}")
 
-                    st.rerun()
+        if st.button("🧹 Limpar Lista da Dobra"):
+            supabase.table(
+                "dobra_hoje"
+            ).delete().neq("id", 0).execute()
 
-else:
+            st.rerun()
 
-    st.subheader("📌 Ficaram na Última Dobra")
+    else:
 
-    st.write("—")
+        st.subheader("📌 Ficaram na Última Dobra")
+
+        st.write("—")
 
 # =========================
 # VIRADINHA OURO
