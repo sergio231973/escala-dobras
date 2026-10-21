@@ -123,6 +123,7 @@ with tab_dobra:
     st.success(f"🎯 Operador da Vez: {fila[0]['nome']}")
 
     for i, f in enumerate(fila):
+        
         if i == 0:
             st.markdown(f"👉👷 **{f['nome']}**")
 
