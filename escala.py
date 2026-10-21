@@ -162,7 +162,7 @@ with tab_dobra:
 
     if ficaram:
 
-        data_dobra = str(ficaram[-1]["Dados"])[:10]
+        data_dobra = str(ficaram[-1]["data"])[:10]
 
         hoje = datetime.now().strftime("%Y-%m-%d")
 
