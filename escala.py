@@ -143,7 +143,7 @@ with tab_dobra:
                 st.rerun()
 
         else:
-            st.write(f"{i-1}º → 👷 {f['nome']}")
+            st.write(f"{i+1}º → 👷 {f['nome']}")
 
         st.divider()
 
