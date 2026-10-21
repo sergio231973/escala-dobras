@@ -106,18 +106,8 @@ def obter_ultima_movimentacao():
 # INTERFACE
 # =========================
 
-st.title("🎮 Escalas da Equipe")
-st.title("🎮 Escalas da Equipe")
+st.title("🚢 Escalas da Equipe"🚢)
 
-st.warning("""
-⚠️ Escala em manutenção temporária.
-
-Estamos realizando ajustes na lógica da fila para garantir o correto posicionamento das dobras e recusas.
-
-Pedimos desculpas pelo transtorno.
-
-Logo retornaremos.
-""")
 tab_dobra, tab_viradinha, tab_hist, tab_admin = st.tabs(
     ["📋 Dobra", "🥇 Viradinha Ouro", "📜 Histórico", "🔐 Admin"]
 )
