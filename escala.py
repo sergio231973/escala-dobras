@@ -164,18 +164,18 @@ with tab_dobra:
 
                 if data_dobra == hoje:
                     st.subheader("📌 Ficaram na Dobra de Hoje")
-            else:
-                st.subheader("📌 Ficaram na Última Dobra")
+                else:
+                    st.subheader("📌 Ficaram na Última Dobra")
 
-            for p in ficaram:
-                st.write(f"👷 {p['nome']}")
+                for p in ficaram:
+                    st.write(f"👷 {p['nome']}")
 
-            if st.button("🧹 Limpar Lista da Dobra"):
-                supabase.table(
-                    "dobra_hoje"
-                ).delete().neq("id", 0).execute()
+                if st.button("🧹 Limpar Lista da Dobra"):
+                    supabase.table(
+                        "dobra_hoje"
+                    ).delete().neq("id", 0).execute()
 
-                st.rerun()
+                    st.rerun()
 
 else:
 
