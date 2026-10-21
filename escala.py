@@ -106,7 +106,7 @@ def obter_ultima_movimentacao():
 # INTERFACE
 # =========================
 
-st.title("🚢 Escalas da Equipe 🚢")
+st.title("ESCALA DA EQUIPE A 🚢")
 
 tab_dobra, tab_viradinha, tab_hist, tab_admin = st.tabs(
     ["📋 Dobra", "🥇 Viradinha Ouro", "📜 Histórico", "🔐 Admin"]
