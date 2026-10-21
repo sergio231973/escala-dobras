@@ -45,6 +45,15 @@ def registrar_hist(tabela, nome, acao):
         "data": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }).execute()
 
+def registrar_controle_dobra(nome, resultado):
+
+    supabase.table(
+        "controle_dobra"
+    ).insert({
+        "nome": nome,
+        "resultado": resultado
+    }).execute()
+
 
 def adicionar_colaborador(tabela, nome):
     fila = get_fila(tabela)
@@ -132,7 +141,7 @@ with tab_dobra:
             if col1.button("✅ Aceitar", key="dobra_aceitar"):
                 mover_fila("fila_dobra", f)
                 registrar_hist("hist_dobra", f["nome"], "aceitou")
-
+                registrar_controle_dobra(f["nome"],"aceitou")
                 supabase.table(
                     "dobra_hoje"
                 ).insert({
@@ -147,6 +156,11 @@ with tab_dobra:
                     "hist_dobra",
                     f["nome"],
                     "recusou"
+                )
+
+                registrar_controle_dobra(
+                     f["nome"],
+                     "recusou"
                 )
                 st.rerun()
 
