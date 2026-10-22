@@ -49,17 +49,24 @@ def registrar_controle_dobra(nome, resultado):
 
     try:
 
-        supabase.table(
+        resposta = supabase.table(
             "controle_dobra"
         ).insert({
             "nome": str(nome),
             "resultado": str(resultado)
         }).execute()
 
+        st.success(
+            f"CONTROLE OK: {nome} - {resultado}"
+        )
+
     except Exception as e:
 
-        st.error(f"ERRO CONTROLE_DOBRA: {e}")
+        st.error(
+            f"ERRO CONTROLE_DOBRA: {str(e)}"
+        )
 
+        raise
 
 def adicionar_colaborador(tabela, nome):
     fila = get_fila(tabela)
