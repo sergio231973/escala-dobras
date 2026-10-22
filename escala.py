@@ -47,12 +47,18 @@ def registrar_hist(tabela, nome, acao):
 
 def registrar_controle_dobra(nome, resultado):
 
-    supabase.table(
-        "controle_dobra"
-    ).insert({
-        "nome": nome,
-        "resultado": resultado
-    }).execute()
+    try:
+
+        supabase.table(
+            "controle_dobra"
+        ).insert({
+            "nome": nome,
+            "resultado": resultado
+        }).execute()
+
+    except Exception as e:
+
+        st.error(f"ERRO CONTROLE_DOBRA: {e}")
 
 
 def adicionar_colaborador(tabela, nome):
