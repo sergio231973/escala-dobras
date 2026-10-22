@@ -52,8 +52,8 @@ def registrar_controle_dobra(nome, resultado):
         supabase.table(
             "controle_dobra"
         ).insert({
-            "nome": nome,
-            "resultado": resultado
+            "nome": str(nome),
+            "resultado": str(resultado)
         }).execute()
 
     except Exception as e:
