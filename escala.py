@@ -222,7 +222,10 @@ with tab_dobra:
 
         st.divider()
 
-        if st.button("🏁 Fechar Dobra"):
+        if st.button(
+            "🏁 Fechar Dobra",
+            key="fechar_dobra_btn"
+        ):
 
             fechar_dobra()
 
