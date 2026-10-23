@@ -227,8 +227,6 @@ with tab_dobra:
             key="fechar_dobra_btn"
         ):
 
-            fechar_dobra()
-
             st.success(
                 "✅ Fila reorganizada com sucesso!"
             )
