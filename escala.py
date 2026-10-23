@@ -220,12 +220,21 @@ with tab_dobra:
         else:
             st.write(f"{i+1}º → 👷 {f['nome']}")
 
-    st.divider()
+        st.divider()
 
+        if st.button("🏁 Fechar Dobra"):
 
-    ficaram = supabase.table(
-        "dobra_hoje"
-    ).select("*").execute().data
+            fechar_dobra()
+
+            st.success(
+                "✅ Fila reorganizada com sucesso!"
+            )
+
+            st.rerun()
+
+        ficaram = supabase.table(
+            "dobra_hoje"
+        ).select("*").execute().data
 
     if ficaram:
 
