@@ -68,6 +68,46 @@ def registrar_controle_dobra(nome, resultado):
 
         raise
 
+def fechar_dobra():
+
+    registros = supabase.table(
+        "controle_dobra"
+    ).select("*").order("id").execute().data
+
+    recusaram = []
+    aceitaram = []
+
+    for r in registros:
+
+        if r["resultado"] == "recusou":
+            recusaram.append(r["nome"])
+
+        elif r["resultado"] == "aceitou":
+            aceitaram.append(r["nome"])
+
+    nova_ordem = recusaram + aceitaram
+
+    for posicao, nome in enumerate(
+        nova_ordem,
+        start=1
+    ):
+
+        supabase.table(
+            "fila_dobra"
+        ).update({
+            "ordem": posicao
+        }).eq(
+            "nome",
+            nome
+        ).execute()
+
+    supabase.table(
+        "controle_dobra"
+    ).delete().neq(
+        "id",
+        0
+    ).execute()
+
 def adicionar_colaborador(tabela, nome):
     fila = get_fila(tabela)
 
