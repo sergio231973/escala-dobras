@@ -454,9 +454,10 @@ with tab_admin:
             
             supabase.table("dobra_hoje").delete().neq("id", 0).execute()
 
-                        st.success("Históricos limpos.")
+            st.success("Históricos limpos.")
 
-                        st.rerun()
+            st.rerun()
 
+    
     else:
         st.info("Área restrita 🔒")
