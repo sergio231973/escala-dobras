@@ -173,6 +173,27 @@ def restaurar_backup_fila():
             "nome",
             item["nome"]
         ).execute()
+
+    # Limpa dobra atual
+    supabase.table(
+        "dobra_hoje"
+    ).delete().neq(
+        "id",
+        0
+    ).execute()
+
+    # Restaura dobra salva
+    dobra_backup = supabase.table(
+        "backup_dobra_hoje"
+    ).select("*").execute().data
+
+    for p in dobra_backup:
+
+        supabase.table(
+            "dobra_hoje"
+        ).insert({
+            "nome": p["nome"]
+        }).execute()
         
 
 def adicionar_colaborador(tabela, nome):
