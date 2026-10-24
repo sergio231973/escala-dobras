@@ -130,6 +130,26 @@ def salvar_backup_fila():
             "nome": f["nome"],
             "ordem": f["ordem"]
         }).execute()
+
+
+def restaurar_backup_fila():
+
+    backup = supabase.table(
+        "backup_fila_dobra"
+    ).select("*").order(
+        "ordem"
+    ).execute().data
+
+    for item in backup:
+
+        supabase.table(
+            "fila_dobra"
+        ).update({
+            "ordem": item["ordem"]
+        }).eq(
+            "nome",
+            item["nome"]
+        ).execute()
         
 
 def adicionar_colaborador(tabela, nome):
@@ -444,6 +464,18 @@ with tab_admin:
             st.success(
                 "✅ Backup da fila salvo com sucesso!"
             )
+
+
+                if st.button("🔄 Restaurar Backup"):
+
+            restaurar_backup_fila()
+
+            st.success(
+                "✅ Backup restaurado com sucesso!"
+            )
+
+            st.rerun()
+            
             
 
         if st.button("🚨 RESETAR HISTÓRICOS"):
