@@ -451,11 +451,16 @@ with tab_admin:
         st.divider()
 
         if st.button("🚨 RESETAR HISTÓRICOS"):
+            
             supabase.table("hist_dobra").delete().neq("id", 0).execute()
+            
             supabase.table("hist_viradinha").delete().neq("id", 0).execute()
+            
             supabase.table("dobra_hoje").delete().neq("id", 0).execute()
-            st.success("Históricos limpos.")
-            st.rerun()
+
+                        st.success("Históricos limpos.")
+
+                        st.rerun()
 
     else:
         st.info("Área restrita 🔒")
