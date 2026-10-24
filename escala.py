@@ -444,11 +444,7 @@ with tab_admin:
             st.success(
                 "✅ Backup da fila salvo com sucesso!"
             )
-
-        if st.button("🚨 RESETAR HISTÓRICOS"):
-
-        
-        st.divider()
+            
 
         if st.button("🚨 RESETAR HISTÓRICOS"):
             
