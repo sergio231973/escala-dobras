@@ -108,6 +108,30 @@ def fechar_dobra():
         0
     ).execute()
 
+
+def salvar_backup_fila():
+
+    supabase.table(
+        "backup_fila_dobra"
+    ).delete().neq(
+        "id",
+        0
+    ).execute()
+
+    fila = get_fila(
+        "fila_dobra"
+    )
+
+    for f in fila:
+
+        supabase.table(
+            "backup_fila_dobra"
+        ).insert({
+            "nome": f["nome"],
+            "ordem": f["ordem"]
+        }).execute()
+        
+
 def adicionar_colaborador(tabela, nome):
     fila = get_fila(tabela)
 
