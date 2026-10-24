@@ -192,7 +192,7 @@ def obter_ultima_movimentacao():
 # INTERFACE
 # =========================
 
-st.title("ESCALA DA EQUIPE A 🚢")
+st.title("ESCALA DA EQUIPE 🚢")
 
 tab_dobra, tab_viradinha, tab_hist, tab_admin = st.tabs(
     ["📋 Dobra", "🥇 Viradinha Ouro", "📜 Histórico", "🔐 Admin"]
@@ -432,6 +432,22 @@ with tab_admin:
                     st.success(f"{novo_nome} removido.")
                     st.rerun()
 
+        
+        st.divider()
+
+        st.subheader("🛡️ Segurança da Fila")
+
+        if st.button("💾 Salvar Backup da Fila"):
+
+            salvar_backup_fila()
+
+            st.success(
+                "✅ Backup da fila salvo com sucesso!"
+            )
+
+        if st.button("🚨 RESETAR HISTÓRICOS"):
+
+        
         st.divider()
 
         if st.button("🚨 RESETAR HISTÓRICOS"):
