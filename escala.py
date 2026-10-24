@@ -111,6 +111,7 @@ def fechar_dobra():
 
 def salvar_backup_fila():
 
+    # Limpa backup da fila
     supabase.table(
         "backup_fila_dobra"
     ).delete().neq(
@@ -118,6 +119,7 @@ def salvar_backup_fila():
         0
     ).execute()
 
+    # Salva fila atual
     fila = get_fila(
         "fila_dobra"
     )
@@ -129,6 +131,27 @@ def salvar_backup_fila():
         ).insert({
             "nome": f["nome"],
             "ordem": f["ordem"]
+        }).execute()
+
+    # Limpa backup da dobra
+    supabase.table(
+        "backup_dobra_hoje"
+    ).delete().neq(
+        "id",
+        0
+    ).execute()
+
+    # Salva lista da dobra
+    ficaram = supabase.table(
+        "dobra_hoje"
+    ).select("*").execute().data
+
+    for p in ficaram:
+
+        supabase.table(
+            "backup_dobra_hoje"
+        ).insert({
+            "nome": p["nome"]
         }).execute()
 
 
