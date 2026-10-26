@@ -69,7 +69,9 @@ def fechar_dobra():
 
     registros = supabase.table(
         "controle_dobra"
-    ).select("*").order("id").execute().data
+    ).select("*").order(
+        "id"
+    ).execute().data
 
     fila_atual = get_fila(
         "fila_dobra"
@@ -77,7 +79,6 @@ def fechar_dobra():
 
     recusaram = []
     aceitaram = []
-
     participantes = []
 
     for r in registros:
@@ -87,11 +88,13 @@ def fechar_dobra():
         )
 
         if r["resultado"] == "recusou":
+
             recusaram.append(
                 r["nome"]
             )
 
         elif r["resultado"] == "aceitou":
+
             aceitaram.append(
                 r["nome"]
             )
@@ -107,8 +110,8 @@ def fechar_dobra():
             )
 
     nova_ordem = (
-        recusaram
-        + nao_participaram
+        nao_participaram
+        + recusaram
         + aceitaram
     )
 
