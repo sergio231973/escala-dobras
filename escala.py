@@ -63,24 +63,54 @@ def registrar_controle_dobra(nome, resultado):
         )
 
         raise
+
+
 def fechar_dobra():
 
     registros = supabase.table(
         "controle_dobra"
     ).select("*").order("id").execute().data
 
+    fila_atual = get_fila(
+        "fila_dobra"
+    )
+
     recusaram = []
     aceitaram = []
 
+    participantes = []
+
     for r in registros:
 
+        participantes.append(
+            r["nome"]
+        )
+
         if r["resultado"] == "recusou":
-            recusaram.append(r["nome"])
+            recusaram.append(
+                r["nome"]
+            )
 
         elif r["resultado"] == "aceitou":
-            aceitaram.append(r["nome"])
+            aceitaram.append(
+                r["nome"]
+            )
 
-    nova_ordem = recusaram + aceitaram
+    nao_participaram = []
+
+    for f in fila_atual:
+
+        if f["nome"] not in participantes:
+
+            nao_participaram.append(
+                f["nome"]
+            )
+
+    nova_ordem = (
+        recusaram
+        + nao_participaram
+        + aceitaram
+    )
 
     for posicao, nome in enumerate(
         nova_ordem,
@@ -102,7 +132,6 @@ def fechar_dobra():
         "id",
         0
     ).execute()
-
 
 def salvar_backup_fila():
 
