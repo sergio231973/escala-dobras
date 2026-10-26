@@ -49,16 +49,12 @@ def registrar_controle_dobra(nome, resultado):
 
     try:
 
-        resposta = supabase.table(
+        supabase.table(
             "controle_dobra"
         ).insert({
             "nome": str(nome),
             "resultado": str(resultado)
         }).execute()
-
-        st.success(
-            f"CONTROLE OK: {nome} - {resultado}"
-        )
 
     except Exception as e:
 
@@ -67,7 +63,6 @@ def registrar_controle_dobra(nome, resultado):
         )
 
         raise
-
 def fechar_dobra():
 
     registros = supabase.table(
